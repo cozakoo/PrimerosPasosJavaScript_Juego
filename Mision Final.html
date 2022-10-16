@@ -1,0 +1,104 @@
+<!DOCTYLE html>
+<html>
+<head>
+    <title> MISION FINAL</title>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+</head>
+    
+<body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    
+    
+    <button> Pulsa aqui para cambiar color y saber la ubicacion</button>
+    <p id= "mensajePosicion"></p>
+    <p id= "mensajeTamanio"></p>
+    <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+   
+
+    <script>
+        
+        //arreglo de color
+        var colores= ["Red","Yellow","Blue","Cyan","DeepPink", "	Mediumvioletred"];
+                
+        var Rectangulo = function () {
+            this.x = numeroAzar(400);
+            this.y = numeroAzar(400);
+            this.ancho=numeroAzar(400);
+            this.alto=numeroAzar(400);
+        };
+        
+        
+        Rectangulo.prototype.cambiarColor= function(){
+            var colorAzar= colores[Math.floor(Math.random() * colores.length)];
+            ctx.fillStyle= colorAzar;
+        };
+
+        
+        Rectangulo.prototype.dibujo= function(){  
+            ctx.fillRect(this.x,this.y,this.ancho,this.alto);
+        };
+        
+        
+        Rectangulo.prototype.mover= function(){
+        
+            
+            this.x++;
+            this.y++;
+            this.alto++;
+            this.ancho++;
+        };
+        
+        
+        var numeroAzar= function(valor){
+            return Math.floor(Math.random() * valor);
+        };
+        
+        
+        Rectangulo.prototype.tocaborde= function(){
+            if ((this.x >= 400) || (this.y >= 400)){
+                this.alto= numeroAzar(400);
+                this.ancho=numeroAzar(400);
+                this.x=numeroAzar(400);
+                this.y=numeroAzar(400);
+                this.cambiarColor();
+            }
+        };
+        
+        
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        
+        var rectangulo= new Rectangulo();
+        rectangulo.cambiarColor();
+        
+        setInterval(function(){
+            ctx.clearRect(0,0,400,400);
+
+            rectangulo.dibujo();
+            rectangulo.mover();
+            rectangulo.tocaborde();
+            
+            ctx.strokeRect(0,0,400,400);
+        },30);
+        
+        
+        Rectangulo.prototype.mostrarMensajePosicion = function() {
+            return "El rectangulo esta en la posicion X: " + this.x + ", Y: " + this.y; 
+        };
+        
+           
+        Rectangulo.prototype.mostrarMensajeTamanio = function() {
+            return "El rectangulo tiene tamaño de : " + this.ancho + " x " + this.alto; 
+        };
+        
+        //al momento de hacer click
+        $(document).ready(function(){  
+            $("button").click(function(){
+                rectangulo.cambiarColor();
+                $("#mensajePosicion").text(rectangulo.mostrarMensajePosicion());
+                $("#mensajeTamanio").text(rectangulo.mostrarMensajeTamanio())
+            });
+        });
+    </script>
+</body>
+</html>
